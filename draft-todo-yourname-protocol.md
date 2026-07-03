@@ -1,25 +1,4 @@
 ---
-###
-# Internet-Draft Markdown Template
-#
-# Rename this file from draft-todo-yourname-protocol.md to get started.
-# Draft name format is "draft-<yourname>-<workgroup>-<name>.md".
-#
-# For initial setup, you only need to edit the first block of fields.
-# Only "title" needs to be changed; delete "abbrev" if your title is short.
-# Any other content can be edited, but be careful not to introduce errors.
-# Some fields will be set automatically during setup if they are unchanged.
-#
-# Don't include "-00" or "-latest" in the filename.
-# Labels in the form draft-<yourname>-<workgroup>-<name>-latest are used by
-# the tools to refer to the current version; see "docname" for example.
-#
-# This template uses kramdown-rfc: https://github.com/cabo/kramdown-rfc
-# You can replace the entire file if you prefer a different format.
-# Change the file extension to match the format (.xml for XML, etc...)
-#
-###
----
 title: "Reality Execution Assurance (REA) Conceptual Framework"
 abbrev: "REA Framework"
 category: info
@@ -54,11 +33,11 @@ whether digitally declared conditions conform to real-world observed states.
 
 The Internet was built from its inception on the foundation of trust between communicating entities within the digital domain. To ensure that packets, sessions, or communicating actors maintain their integrity within this digital space, mechanisms such as IP reachability, TLS end-to-end confidentiality, and credential- and token-based authorization frameworks have been devised and continuously advanced.
 
-The Remote Attestation Procedures (RATS) architecture {{RFC9334}}, which verifies the trustworthiness of remote devices, introduced standardized formats for Evidence and Attestation Results. This has been further extended by the EAT specification {{RFC9711}} to granularly express device characteristics, and the Endorsements structure {{I-D.ietf-rats-endorsements}} designed to supplement the appraisal process. Alongside these developments, the Supply Chain Integrity, Transparency, and Trust (SCITT) architecture {{I-D.ietf-scitt-architecture}}, which addresses supply chain trustworthiness, connects the integrity and transparency of the entire supply chain in an auditable manner. It achieves this based on a structure of Statements made by supply chain components (such as software or hardware) and tamper-evident cryptographic Receipts. Recently, subsequent standard specifications have materialized—including the HTTP-based Reference APIs {{I-D.ietf-scitt-scrapi}} and the CCF (Confidential Consortium Framework) ledger-based Profile for COSE Receipts {{I-D.ietf-scitt-receipts-ccf-profile}}—deepening the layer of trust within the digital domain. Although their focus areas differ, these technologies share a common structural paradigm: evaluating "what can be trusted" based on evidence.
+The Remote ATtestation ProcedureS (RATS) architecture {{RFC9334}}, which verifies the trustworthiness of remote devices, introduced standardized formats for Evidence and Attestation Results. This has been further extended by the EAT specification {{RFC9711}} to granularly express device characteristics, and the Endorsements structure {{I-D.ietf-rats-endorsements}} designed to supplement the appraisal process. Alongside these developments, the Supply Chain Integrity, Transparency, and Trust (SCITT) architecture {{I-D.ietf-scitt-architecture}}, which addresses supply chain trustworthiness, connects the integrity and transparency of the entire supply chain in an auditable manner. It achieves this based on a structure of Statements made by supply chain components (such as software or hardware) and tamper-evident cryptographic Receipts. Recently, subsequent standard specifications have materialized—including the HTTP-based Reference APIs {{I-D.ietf-scitt-scrapi}} and the CCF (Confidential Consortium Framework) ledger-based Profile for COSE Receipts {{I-D.ietf-scitt-receipts-ccf-profile}}—deepening the layer of trust within the digital domain. Although their focus areas differ, these technologies share a common structural paradigm: evaluating "what can be trusted" based on evidence.
 
 However, recent shifts are fundamentally transforming the object of trust itself. The recipients of network requests are no longer confined to servers, software, or user terminals. Autonomous vehicles, robots, drones, smart locks, industrial automation equipment, and physical AI—systems that physically move to execute tasks—are taking their place. Consequently, a single digital request translates directly into a physical action: opening a door, moving a vehicle, handing over an object, or occupying a physical space. While RATS asks, "How do we prove the current internal state of this system?" the question we face today represents the next evolution: "Does the digitally proven state actually align with the physical reality right in front of us at this very moment?"
 
-This is a novel boundary problem naturally encountered by the Internet and digital systems as they attempt to extend their established trust boundaries to physical execution in the real world. This challenge can no longer be deferred, particularly due to the rapid proliferation of agent-based AI. The delegation of execution to autonomous agents is becoming commonplace through Agent-to-Agent (A2A) interaction, Agent-to-Infrastructure (A2I) interaction, Agent-to-API (A2P) connectivity, and the Model Context Protocol (MCP). As we approach a reality where autonomous agents make reservations, approve transactions, make calls, and enter into contracts on behalf of humans, and physical AI and automated systems translate these into real-world actions {{EXEC-GOV}}, we urgently need a methodology to verify whether the conditions declared in the digital domain match the states observed in reality. Furthermore, we need a way to formulate these answers into a reusable structure that other systems can directly ingest.
+This is a novel boundary problem naturally encountered by the Internet and digital systems as they attempt to extend their established trust boundaries to physical execution in the real world. This challenge can no longer be deferred, particularly due to the rapid proliferation of agent-based AI. The delegation of execution to autonomous agents is becoming commonplace through Agent-to-Agent (A2A) interaction, Agent-to-Infrastructure (A2I) interaction, and the Model Context Protocol (MCP). As we approach a reality where autonomous agents make reservations, approve transactions, make calls, and enter into contracts on behalf of humans, and physical AI and automated systems translate these into real-world actions {{EXEC-GOV}}, we urgently need a methodology to verify whether the conditions declared in the digital domain match the states observed in reality. Furthermore, we need a way to formulate these answers into a reusable structure that other systems can directly ingest.
 
 This document defines this problem domain as Reality Execution Assurance (REA). Through this document, we propose a framework to apply the familiar structure of evidence-appraisal-attestation results, established by RATS and SCITT, directly to the problem of verifying physical execution rather than purely digital systems.
 
@@ -97,8 +76,11 @@ Subsequent System (e.g., Relying Party):
 ## Gaps Between Digital Representation and Physical Execution
 
 * **Temporal Gap**: While digital authentication or authorization checks succeed at a specific point in time to issue a command, physical execution in the real world progresses over a duration of time. Due to real-time dynamic environmental shifts, the data at the time of command generation and the physical state at the moment the hardware operates may mismatch, potentially causing control errors or security voids during this brief interval.
+
 * **Subject Gap**: The account or session possessing digital credentials does not always align with the actor performing the actual physical execution. Even if session continuity is securely maintained at the upper logical layer, traditional protocol architectures cannot easily detect instances where physical hardware detaches without the network's knowledge, masquerades using sophisticated clones, shares credentials, acts via unauthorized proxy, or falls victim to relay attacks mid-communication.
+
 * **Continuity Gap**: Real-world execution is not a single, isolated event; rather, it consists of a continuous workflow involving entry, approach, execution, and termination. Existing systems typically verify a one-time digital authentication only at the initial phase and fail to monitor whether the execution conditions are continuously maintained across the physical space throughout the entire required duration, leaving them vulnerable to man-in-the-middle attacks that intercept legitimate signals.
+
 * **Factual Conformity Gap**: Data such as location points, sensor readings, and device statuses represent reality; however, in environments where multiple pieces of evidence are incomplete, conflicting, or susceptible to manipulation, it is difficult to determine actual physical alignment solely through a single signal or the internal consistency of a digital signaling system. If the initial real-world data entering the system is distorted, the protective safeguards of the virtual world fail to defend against real-world physical anomalies or destruction.
 
 ## Limitations of Existing Digital Components
@@ -110,10 +92,15 @@ Network protocols, session management, authentication, authorization, decentrali
 Discussions regarding REA standardization must take the following requirements into consideration:
 
 * **Inclusivity of Subjects and Targets**: The framework must be capable of referencing actors, devices, objects, spaces, environments, and temporal conditions within the physical execution environment, and it must not be restricted to a single domain.
+
 * **Condition Expressiveness**: The framework must be able to express not only location or proximity, but also the continuity of conditions, the freshness of evidence, and states of partial fulfillment or insufficient evidence.
+
 * **Single-Flow Integrity**: The collection of observed evidence, appraisal against declared conditions, generation of assurance results, and delivery to subsequent systems must be consistently linked and interpreted within the same execution context.
+
 * **Observation Technology Independence**: The framework must not depend on specific sensors, signals, devices, or measurement methods, ensuring that assurance results can be interpreted with a common meaning across varying deployment environments.
+
 * **Privacy Protection**: Beyond the scope required to support the assurance results, the system must not excessively expose identifiable information—such as the location or behavior of physical subjects—and must strictly adhere to the principle of data minimization.
+
 * **Resistance to Mismatch and Misuse**: The framework must be resilient against real-world execution anomalies and adversarial misuse, including evidence reuse, subject substitution, credential sharing, relay attacks, and observation delays.
 
 # REA Conceptual Framework
